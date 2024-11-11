@@ -16,12 +16,14 @@ def labelflipping_targeted_specific(dataset, indices, label_og: Union[list, int]
     :return:
     """
     logging.info("[Attack Labelflipping_targeted_specific] running attack on dataset")
-    logging.info(f"received: label_og{label_og}, label_goal{label_goal}")
     new_dataset = copy.copy(dataset)
     try:
         targets = new_dataset.targets.detach().clone()
     except AttributeError:
         targets = new_dataset.targets
+    if isinstance(label_goal, list):
+        label_goal = int(label_goal[0])
+
     logging.info("[LabelFlipping Attack] Changing labels from {} to {}".format(label_og, label_goal))
 
     for i in indices:
@@ -30,7 +32,10 @@ def labelflipping_targeted_specific(dataset, indices, label_og: Union[list, int]
         except AttributeError:
             t = targets[i]
         if (t in label_og) or (str(t) in label_og):
-            targets[i] = label_goal
+            try:
+                targets[i] = label_goal
+            except TypeError as e:
+                targets[i] = torch.tensor(label_goal)
     new_dataset.targets = targets
     return new_dataset
 
@@ -49,8 +54,11 @@ def labelflipping_targeted_unspecific(dataset, indices, label_og: Union[list, in
     logging.info("[LabelFlipping Attack] Changing labels from {} randomly.".format(label_og))
 
     for i in indices:
-        t = targets[i]
-        if str(t) in label_og:
+        try:
+            t = targets[i].numpy()
+        except AttributeError:
+            t = targets[i]
+        if (t in label_og) or (str(t) in label_og):
             targets[i] = torch.tensor(
                 random.sample(sorted([x for x in class_list if x != t]), 1)
             )
