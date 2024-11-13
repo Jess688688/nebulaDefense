@@ -1,4 +1,7 @@
 import logging
+
+from torch.backends.quantized import engine
+
 from nebula.core.aggregation.aggregator import Aggregator
 
 class ReactiveAggregator(Aggregator):
@@ -8,13 +11,17 @@ class ReactiveAggregator(Aggregator):
     def run_aggregation(self, models):
         logging.info(f"[ReactiveAggregator] Initializing Aggregation")
         super().run_aggregation(models)
-
-        if self.engine._is_malicious:
+        malicious_nodes, reputation_score = self.engine.reputation_calculation(models)
+        if len(malicious_nodes) > 0:
+            logging.info(f"[ReactiveAggregator] Detected Malicious Nodes: {malicious_nodes}")
+            self.engine.nebulalogger.log_text(tag="[ReactiveAggregator] Malicious nodes", text=str(malicious_nodes), step=self.engine.round)
             from nebula.core.aggregation.dynamicAggregator import DynamicAggregator
             logging.info(f"[ReactiveAggregator] Malicious Node - Using Dynamic Aggregator")
-            dynamic_aggregator = DynamicAggregator(config=self.config)
-            return dynamic_aggregator.run_aggregation(models, tensorboard_log = False)
+            dynamic_aggregator = DynamicAggregator(config=self.config, engine = self.engine)
+            return dynamic_aggregator.run_aggregation(models, reactive_aggregator = True)
         else:
+            logging.info(f"[ReactiveAggregator] No Malicious Nodes Detected")
+            self.engine.nebulalogger.log_text(tag="[ReactiveAggregator] Malicious nodes", text="None", step=self.engine.round)
             default_aggregator = self.config.participant["aggregator_args"]["reactive_aggregator_default"]
             logging.info(f"[ReactiveAggregator] Normal Node - Using Aggregator {default_aggregator}")
             from nebula.core.aggregation.fedavg import FedAvg

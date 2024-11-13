@@ -76,7 +76,7 @@ class Lightning:
         running_loss = 0
         bootstrap_dataloader = self.data.bootstrap_dataloader()
         num_samples = 0
-        neighbour_model = copy.deepcopy(self.model)
+        neighbour_model = self.model
         neighbour_model.load_state_dict(neighbour_model_param)
 
         # enable evaluation mode, prevent memory leaks.

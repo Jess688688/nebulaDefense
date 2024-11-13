@@ -654,11 +654,11 @@
                         <input type="number" class="form-control" id="options_label_flipping_fang_config_node_percent" step="1" min="0" max="100" value="20" style="display: inline; width: 5%">
                         % of nodes
                     </div>
-                    <div id="options_lie_atk" style="display: none;">
+                    <div id="options_lie_atk" style="display: none; margin-top: 5px">
 
                         percent of malicious nodes<input type="number" class="form-control" id="options_lie_atk_node_percent" value="20" style="display: inline; width: 5%">
                         z <input type="number" class="form-control" id="options_lie_atk_z" style="display: inline; width: 5%">
-                                            <button type="button" role="button" class="btn" onclick="calc_z()">Calculate Z</button>
+                                            <button type="button" role="button" class="btn btn-info-participant" onclick="calc_z()">Calculate Z</button>
                     <script>
                         function calc_z(){
                             let num_nodes_total = document.getElementById('info-participants-number').innerHTML

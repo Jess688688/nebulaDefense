@@ -545,22 +545,22 @@ class Engine:
 
         for untrusted_node in untrusted_nodes:
             logging.info(f"reputation_calculation untrusted_node at round {self.round}: {untrusted_node}")
-            logging.info(f"reputation_calculation self.get_name() at round {self.round}: {self.get_name()}")
-            if untrusted_node != self.get_name():
-                untrusted_model = current_models[untrusted_node]
-                cossim = cosine_metric(local_model, untrusted_model, similarity=True)
-                logging.info(f"reputation_calculation cossim at round {self.round}: {untrusted_node}: {cossim}")
-                self.trainer._logger.log_data({f"Reputation/cossim_{untrusted_node}": cossim}, step=self.round)
+            #logging.info(f"reputation_calculation self.get_name() at round {self.round}: {self.get_name()}")
+            #if untrusted_node != self.get_name():
+            untrusted_model = current_models[untrusted_node]
+            cossim = cosine_metric(local_model, untrusted_model, similarity=True)
+            logging.info(f"reputation_calculation cossim at round {self.round}: {untrusted_node}: {cossim}")
+            self.trainer._logger.log_data({f"Reputation/cossim_{untrusted_node}": cossim}, step=self.round)
 
-                avg_loss = self.trainer.validate_neighbour_model(untrusted_model)
-                logging.info(f"reputation_calculation avg_loss at round {self.round} {untrusted_node}: {avg_loss}")
-                self.trainer._logger.log_data({f"Reputation/avg_loss_{untrusted_node}": avg_loss}, step=self.round)
-                reputation_score[untrusted_node] = (cossim, avg_loss)
+            avg_loss = self.trainer.validate_neighbour_model(untrusted_model)
+            logging.info(f"reputation_calculation avg_loss at round {self.round} {untrusted_node}: {avg_loss}")
+            self.trainer._logger.log_data({f"Reputation/avg_loss_{untrusted_node}": avg_loss}, step=self.round)
+            reputation_score[untrusted_node] = (cossim, avg_loss)
 
-                if cossim < cossim_threshold or avg_loss > loss_threshold:
-                    malicious_nodes.append(untrusted_node)
-                else:
-                    self._secure_neighbors.append(untrusted_node)
+            if cossim < cossim_threshold or avg_loss > loss_threshold:
+                malicious_nodes.append(untrusted_node)
+            else:
+                self._secure_neighbors.append(untrusted_node)
 
         return malicious_nodes, reputation_score
 
