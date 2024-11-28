@@ -634,7 +634,7 @@ class AggregatorNode(Engine):
 
         if self.lie_atk:
             from nebula.addons.attacks.poisoning.update_manipulation import update_manipulation_LIE
-            await self.aggregator.include_model_in_buffer(update_manipulation_LIE(self.trainer.get_model_parameters(),899), self.trainer.get_model_weight(), source=self.addr, round=self.round)
+            await self.aggregator.include_model_in_buffer(update_manipulation_LIE(self.trainer.get_model_parameters(),self.lie_atk_z), self.trainer.get_model_weight(), source=self.addr, round=self.round)
         else:
             await self.aggregator.include_model_in_buffer(self.trainer.get_model_parameters(), self.trainer.get_model_weight(), source=self.addr, round=self.round)
 

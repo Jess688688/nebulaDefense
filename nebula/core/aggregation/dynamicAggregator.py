@@ -16,6 +16,7 @@ class DynamicAggregator(Aggregator):
         from nebula.core.aggregation.bulyan import Bulyan
         super().run_aggregation(models)
         available_aggregators = [FedAvg, Krum, Median, TrimmedMean, Bulyan]
+
         # needed to remove fixed seed
         #import time
         #random.seed(int(str(time.time_ns())[-8:]))
