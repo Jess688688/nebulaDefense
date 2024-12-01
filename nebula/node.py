@@ -171,6 +171,11 @@ async def main():
         target_label=target_label,
         target_changed_label=target_changed_label,
         noise_type=noise_type,
+        in_eval_indices = dataset.in_eval,
+        out_eval_indices = dataset.out_eval,
+        shadow_train_indices = dataset.shadow_train,
+        shadow_test_indices = dataset.shadow_test,
+        indexing_map = dataset.indexing_map
     )
 
     # - Import MNISTDatasetScikit (not torch component)

@@ -91,3 +91,4 @@ class MNISTDataset(NebulaDataset):
             self.plot_all_data_distribution(dataset, partitions_map)
             
         return partitions_map[self.partition_id]
+
