@@ -26,8 +26,9 @@ class PrioritySelector(Selector):
     MAX_PERCENT_SELECTABLE_NEIGHBORS = 0.8
     # Original Feature Weights provided in Report / Thesis
     FEATURE_WEIGHTS = [1.0, 1.0, 1.0, 0.5, 0.5, 10.0, 3.0]
+
     # Feature Weights for Testing (Latency can be changed reliably by virtual constraints)
-    # FEATURE_WEIGHTS = [0, 0, 0, 0, 0, 100, 0]
+    #FEATURE_WEIGHTS = [0, 0, 0, 0, 0, 100, 0]
 
     def __init__(self, config = None):
         super().__init__(config)
