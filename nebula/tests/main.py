@@ -4,10 +4,59 @@ import os
 import sys
 from datetime import datetime
 
+import time
 import docker
 
 # Constants
-TIMEOUT = 3600
+TIMEOUT = 7200
+
+
+root_path = os.path.normpath(
+                os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)),
+                    "..",
+                    ".."
+                )
+            )
+log_dir = os.path.normpath(
+                os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)),
+                    "..",
+                    "..",
+                    "app",
+                    "logs",
+                )
+            )
+config_dir =  os.path.normpath(
+                os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)),
+                    "..",
+                    "..",
+                    "app",
+                    "config",
+                )
+            )
+
+cert_dir =  os.path.normpath(
+                os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)),
+                    "..",
+                    "..",
+                    "app",
+                    "certs",
+                )
+            )
+print(cert_dir)
+statistics_port = '6065'
+host_platform = 'unix'
+print("Saving configuration in environment variables...")
+os.environ["NEBULA_ROOT"] = root_path
+os.environ["NEBULA_LOGS_DIR"] = log_dir
+os.environ["NEBULA_CONFIG_DIR"] = config_dir
+os.environ["NEBULA_CERTS_DIR"] = cert_dir
+os.environ["NEBULA_STATISTICS_PORT"] = str(statistics_port)
+os.environ["NEBULA_ROOT_HOST"] = root_path
+os.environ["NEBULA_HOST_PLATFORM"] = host_platform
 
 
 # Detect CTRL+C from parent process
@@ -161,9 +210,9 @@ def run_test(test_path):
 
 # Run a single scenario
 def run_scenario(scenario):
-    from nebula.scenarios import ScenarioManagement
     import subprocess
-
+    from nebula.scenarios import ScenarioManagement
+    
     # Manager for the actual scenario
     scenarioManagement = ScenarioManagement(scenario, "nebula-test")
 
@@ -183,4 +232,5 @@ def run_scenario(scenario):
 
 if __name__ == "__main__":
     create_docker_network()
-    menu()
+    run_test(os.path.join(os.path.dirname(__file__), "mia_test.json"))
+

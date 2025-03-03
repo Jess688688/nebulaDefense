@@ -216,6 +216,32 @@ class ScenarioManagement:
         self.start_date_scenario = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         self.scenario_name = f'nebula_{self.scenario.federation}_{datetime.now().strftime("%d_%m_%Y_%H_%M_%S")}'
         self.root_path = os.environ.get("NEBULA_ROOT_HOST")
+        
+        # from test (without frontend) scenario
+        
+        dataset = self.scenario.dataset
+        numnodes = self.scenario.n_nodes
+        iid = self.scenario.iid
+        if iid=='true' or iid==True:
+            iid = 'IID'
+        else:
+            iid = f'nonIID-alpha-{self.scenario.partition_parameter}'
+        model = self.scenario.model
+        agg_algorithm = self.scenario.agg_algorithm
+        dflrounds = self.scenario.rounds
+        epochs = self.scenario.epochs
+        
+        mia = self.scenario.MIA
+        mia_defense = self.scenario.MIA_Defense
+        shadow_model_number = self.scenario.Shadow_Model_Number
+        attack_model = self.scenario.Attack_Model
+        metric_detail = self.scenario.Metric_Detail
+        
+        # new scenario name
+        self.scenario_name = f"{dataset}_nodes:{numnodes}_MIA:{mia}_Defense:{mia_defense}_ShodowModelNumber:{shadow_model_number}_AttackModel:{attack_model}_MetricDetail:{metric_detail}_{iid}_{model}_{agg_algorithm}_rounds:{dflrounds}_epochs:{epochs}_{datetime.now().strftime('%d_%m_%Y_%H_%M_%S')}"
+        self.scenario_name = self.scenario_name.replace(' ', '-')
+        print("self.scenario_name", os.environ.get("NEBULA_CONFIG_DIR"))  
+               
         self.config_dir = os.path.join(os.environ.get("NEBULA_CONFIG_DIR"), self.scenario_name)
         self.log_dir = os.environ.get("NEBULA_LOGS_DIR")
         self.cert_dir = os.environ.get("NEBULA_CERTS_DIR")

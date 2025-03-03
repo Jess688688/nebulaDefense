@@ -94,7 +94,7 @@ class Engine:
         self.name = config.participant["device_args"]["name"]
         self.docker_id = config.participant["device_args"]["docker_id"]
         self.client = docker.from_env()
-
+        
         print_banner()
         print_msg_box(msg=f"Name {self.name}\nRole: {self.role}", indent=2, title="Node information")
 
@@ -551,6 +551,13 @@ class Engine:
                      "MIA_Evaluation/Attack Recall": self.mia_metrics["Recall"][self.round],
                      "MIA_Evaluation/Attack F1-Score": self.mia_metrics["F1"][self.round]}, self.round)
                 logging.info("MIA ends.")
+                
+                metrics_str = ""
+                for key, value in self.mia_metrics.items():
+                    metrics_str += f"{key}: {value[self.round]:.4f}\n"
+                print_msg_box(metrics_str, indent=2, title=f"MIA_Evaluation| Round: {self.round}")
+
+        
             # End MIA
 
             await self._extended_learning_cycle()
