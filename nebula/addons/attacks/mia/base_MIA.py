@@ -61,6 +61,7 @@ class MembershipInferenceAttack:
             Returns:
                 tuple: A tuple containing tensors of predictions and labels.
         """
+        model.to(self.device)
         model.eval()
         predictions = []
         labels = []
